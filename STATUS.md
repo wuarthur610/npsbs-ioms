@@ -1,4 +1,25 @@
-# 目前狀態
+# 目前狀態## 
+##2026-09-15 — GPT Architecture Decision
+
+**Status:** CONDITIONAL APPROVAL
+
+- FIXED14 remains the verified technical baseline.
+- CANDIDATE-01 remains a development candidate and is NOT Production Ready.
+- GPT Decision: `decisions/GPT_Decision_20260915.md`
+- Production Contract V1.1 is the normative contract for the next implementation cycle.
+- P0 blockers:
+  - Treatment transaction atomicity / rollback
+  - Pending settlement atomicity / rollback
+  - CardID format `PREFIX + YYYYMMDD + ###`
+  - Explicit card balance guard
+  - Card_Usage_Detail Before / Used / After traceability
+- P1:
+  - Oldest eligible card selection
+  - 映遊卡 remains HOLD until CardID prefix is formally confirmed
+- Gemini findings CRITICAL-01 and CRITICAL-02 were rejected as current contract violations.
+- Next workflow:
+  `GPT Decision → Production Contract V1.1 → Claude Patch → Gemini QA → Arthur Compile/UAT → GPT Final Gate → Production`
+- GitHub privacy rule remains mandatory: no real customer names in engineering artifacts; use CustomerID or synthetic IDs.
 
 **最後更新**：2026-09-15（Arthur）
 
