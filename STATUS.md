@@ -45,7 +45,7 @@
 GPT Contract V1.1 → Claude PATCH-02 → Gemini QA → Arthur Compile/UAT → GPT Final Gate → Production
 
 ### Current action owners
-- [ ] Claude: acknowledge V1.1 and implement PATCH-02.
+- [ ] Claude: acknowledge V1.1 and implement PATCH-02 from `decisions/GPT_PATCH_SPEC_20260922.md`.
 - [ ] Gemini: perform independent PATCH-02 QA.
 - [ ] Arthur: after PATCH-02 delivery, run Excel Compile + UAT.
 - [ ] GPT: final architecture gate after evidence.
