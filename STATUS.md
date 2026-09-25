@@ -1,24 +1,28 @@
 # 目前狀態
 
-## 2026-09-22 — PATCH-02 Implementation Complete (Claude)
+## 2026-09-25 — PATCH-02 Hotfix-01 Complete (Claude)
 
-- Baseline: CANDIDATE-01（確認未變更）
-- Contract: Production Contract V1.1
-- Specification: GPT_PATCH_SPEC_20260922
-- 6 個模組修改（modCard / modCardUsage / modTreatment / modSystemCore / modText / modFormBuilder），11 個逐位元組未動
-- P0-01～P0-06、P1-01～P1-03 全部完成，Static QA PASS
-- Compile / Runtime / UAT：UNVERIFIED（Claude 無 Excel 環境）
+- 問題：Arthur 匯入 `modFormBuilder.bas` 時 Excel VBE 跳出「換行接續符號過多」，TEST-01 卡住
+- 診斷：確認為真實問題，非誤判。`BuildShortage` 有 35 個換行接續符號，超過 VBA 單一陳述式 24 個的硬性上限；`BuildTreatment` 剛好壓線在 24（雖未超過但極脆弱）
+- 修法：新增 `AppendCode` helper，把長串 `& vbCrLf & _` 陳述式改成逐行獨立陳述式，接續符號歸零。全部 8 個 `Build*` 程序都檢查過，7 個需要修改的都已修改
+- 驗證：用 Python 模擬新舊組字串方式，逐字元比對 `BuildShortage`／`BuildTreatment`（風險最高的兩個）注入到表單的實際 VBA 內容——**完全一致**，確認純粹是組裝方式改變，內容未變
+- 範圍：只改了 `modFormBuilder.bas`；`modTreatment`／`modCard`／22欄schema／CardID規則／Card_Usage_Detail 全部未動
+- Static QA：PASS（ASCII安全、Sub/End配對、無重複程序、最長接續鏈 35→2、最長單行437字元）
+- Compile／Runtime／UAT：UNVERIFIED（Claude 無 Excel 環境，只能給到 SOURCE STATIC PASS）
 - Artifacts:
-  * `candidates/PATCH-02/`
-  * `reviews/Claude_PATCH-02_Implementation_20260922.md`
-  * `reviews/Claude_PATCH-02_Control_Manifest_20260922.md`
-  * `reviews/Claude_PATCH-02_Schema_Manifest_20260922.md`
+  * `candidates/PATCH-02/VBA_Modules/modFormBuilder.bas`（已上傳，取代舊版）
+  * `reviews/Claude_PATCH-02_Hotfix-01_Implementation_20260925.md`（已上傳）
 
-**最後更新**：2026-09-22（Arthur）
+**最後更新**：2026-09-25（Arthur）
 
 ## 等誰動作
 
-- [ ] Gemini：對 PATCH-02 做獨立 QA
-- [ ] Arthur：匯入 6 個修改模組 → Debug/Compile VBAProject → 回報結果（先不要跑 UAT）
-- [ ] GPT：等 Compile 確認後做 Final Architecture Gate
-- [ ] Claude：等 Gemini QA + Arthur Compile 結果，暫停寫程式
+- [ ] Gemini：對 Hotfix-01 做獨立 QA（不可跳過）
+- [ ] GPT：Gemini QA 完成後做 Architecture Review
+- [ ] Arthur：等 GPT Review 過後，重新匯入 `modFormBuilder.bas` 執行 TEST-01 → TEST-02 Compile → TEST-03 BuildProductionUserForms
+- [ ] Claude：等 Gemini QA + GPT Review 結果，暫停寫程式
+
+## 待 Arthur 決定的事
+
+1. 映遊卡的 CardID 前綴是什麼？
+2. 套卡新規格從哪一天開始生效？（舊卡不得回溯套用）
