@@ -1,4 +1,82 @@
 # 目前狀態
+# STATUS.md — PATCH-02 Hotfix-03 Update
+
+## 2026-09-30 — PATCH-02 Hotfix-03
+
+**Status:** READY FOR CLAUDE IMPLEMENTATION / PRODUCTION BLOCKED
+
+### Latest Arthur Excel TEST-05
+
+| Test | Result |
+|---|---|
+| Therapist dropdown | ❌ FAIL — no data |
+| Treatment Type dropdown | ✅ PASS — 一般調理／體驗調理 |
+| Treatment Type label | ✅ PASS — 治療類型 |
+| Booking Type dropdown | ✅ PASS — 4 options |
+| Sessions auto-calculation | ✅ PASS |
+| CustomerName → CustomerID | ✅ PASS |
+| CustomerID → CardID auto-load | ❌ FAIL — CardID not automatically populated |
+
+### Interpretation
+
+The latest TEST-05 result leaves exactly two Runtime blockers:
+
+1. **Therapist dropdown has no data**
+2. **CardID is not automatically populated after CustomerID is available**
+
+The CustomerID lookup itself is PASS. The CardID issue is therefore a separate UI/data-binding/runtime issue and must not be interpreted as a CustomerID failure.
+
+### PATCH-02 Hotfix-03 Scope
+
+Claude is authorized to fix only:
+
+- Therapist dropdown data loading from the current actual Master Data / `Therapist_Master` source.
+- CardID automatic loading/selection after CustomerID is available, reusing the existing formal card lookup logic such as `FindUsableCard` or its current equivalent.
+
+### Protected PASS Functions
+
+Hotfix-03 must preserve:
+
+- Treatment Type dropdown
+- Treatment Type label
+- Booking Type dropdown
+- Sessions auto-calculation
+- CustomerName → CustomerID
+- Payment Method
+- Shortage Resolution
+- Treatment Revenue
+- Existing transaction architecture
+- 22-column Treatment_Record contract
+- CardID generation rules
+
+### Prohibited
+
+- No wholesale rewrite.
+- No resurrection of obsolete 21-column MVP logic.
+- No resurrection of obsolete `modIOMS_Core.bas`.
+- No hardcoded therapist list.
+- No transaction-core redesign.
+- No schema redesign.
+
+### QA Workflow
+
+`Claude PATCH-02 Hotfix-03`
+→ `Gemini Independent QA`
+→ `GPT Architecture Gate`
+→ `Arthur Excel TEST-05`
+→ `TEST-06 only after TEST-05 PASS`
+
+### Release Gate
+
+Production remains **BLOCKED** until:
+
+- Therapist dropdown Runtime PASS
+- CardID auto-load Runtime PASS
+- Existing TEST-05 PASS items remain PASS
+- Claude Static QA PASS
+- Gemini QA PASS
+- GPT Architecture Gate PASS
+- Arthur TEST-05 PASS
 
 ## 2026-09-29 — PATCH-02 Hotfix-02 Complete (Claude)
 
